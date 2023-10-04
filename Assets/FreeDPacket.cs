@@ -13,8 +13,8 @@ namespace FreeD
         public float PosZ;
         public float PosX;
         public float PosY;
-        public int Zoom;
-        public int Focus;
+        public float Zoom;
+        public float Focus;
 
         public static Packet Decode(byte[] data)
         {
@@ -29,8 +29,8 @@ namespace FreeD
                     PosZ = GetPosition(data.Skip(11).Take(3).ToArray()),
                     PosX = GetPosition(data.Skip(14).Take(3).ToArray()),
                     PosY = GetPosition(data.Skip(17).Take(3).ToArray()),
-                    Zoom = GetEncoder(data.Skip(20).Take(3).ToArray()),
-                    Focus = GetEncoder(data.Skip(23).Take(3).ToArray())
+                    Zoom = GetPosition(data.Skip(20).Take(3).ToArray()),
+                    Focus = GetPosition(data.Skip(23).Take(3).ToArray())
                 };
 
                 return trackingData;
@@ -48,8 +48,8 @@ namespace FreeD
             output = output.Concat(SetPosition(data.PosZ)).ToArray();  // X
             output = output.Concat(SetPosition(data.PosX)).ToArray();  // Y
             output = output.Concat(SetPosition(data.PosY)).ToArray();  // Z
-            output = output.Concat(SetEncoder(data.Zoom)).ToArray();  // Zoom
-            output = output.Concat(SetEncoder(data.Focus)).ToArray();  // Focus
+            output = output.Concat(SetPosition(data.Zoom)).ToArray();  // Zoom
+            output = output.Concat(SetPosition(data.Focus)).ToArray();  // Focus
             output = output.Concat(new byte[] { 0x00, 0x00 }).ToArray();  // Reserved
             output = output.Concat(new byte[] { (byte)Checksum(output) }).ToArray();  // Checksum
 
@@ -86,7 +86,7 @@ namespace FreeD
 
         public static float GetRotation(byte[] data)
         {
-            return (float)(BitConverter.ToInt32(new byte[] { 0x00, data[2], data[1], data[0] }, 0) / 32768 / 256);
+            return (float)(BitConverter.ToInt32(new byte[] { 0x00, data[2], data[1], data[0] }, 0) / 32768f / 256f);
         }
 
         public static int GetEncoder(byte[] data)

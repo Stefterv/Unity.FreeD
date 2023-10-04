@@ -28,6 +28,7 @@ namespace FreeD {
         public int listenPort = 40_000;
         public delegate void PacketReceived(Packet packet);
         public PacketReceived received;
+        bool active = true;
 
        
         public async void Start() {
@@ -35,7 +36,10 @@ namespace FreeD {
             IPEndPoint groupEP = new IPEndPoint(IPAddress.Any, listenPort);
             try
             {
-                while (true)
+#if FREED_DEBUG
+                Debug.Log("Started listening on ${listenPort}");
+#endif
+                while (active)
                 {
                     var result = await listener.ReceiveAsync();
 
@@ -57,6 +61,9 @@ namespace FreeD {
             {
                 listener.Close();
             }
+        }
+        public void Stop() {
+            //active = false;
         }
     }
 }
