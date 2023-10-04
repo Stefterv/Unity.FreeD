@@ -27,6 +27,7 @@ namespace FreeD
             transform.localPosition = new Vector3(packet.PosX / 1000f, packet.PosY / 1000f, -packet.PosZ / 1000f);
             transform.localRotation = Quaternion.identity;
             transform.Rotate(Vector3.up, packet.Pan);
+            transform.Rotate(Vector3.up, 90f);
             transform.Rotate(Vector3.right, -packet.Tilt);
             transform.Rotate(Vector3.forward, -packet.Roll);
 
